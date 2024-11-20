@@ -1,0 +1,39 @@
+
+/* 让整个页面使用 flexbox 来居中 */
+body,
+html {
+  height: 100vh;
+  /* 确保页面和html元素占满整个视口 */
+  margin: 0;
+  /* 移除默认的外边距 */
+  background-color: #f0f2f5;
+  /* 设置背景色 */
+}
+
+/* 给整个页面添加一个背景色 */
+.login-container {
+  height: 100vh;
+  /* 确保容器填充整个视口高度 */
+  width: 100vw;
+  /* 容器宽度 100% */
+  display: flex;
+  /* 水平居中  */
+  justify-content: center; 
+  /* 垂直居中 */
+  align-items: center;
+}
+
+/* 设置Form样式 */
+.ant-form {
+  width: 100%;
+  max-width: 360px;
+  /* 控制最大宽度 */
+  padding: 20px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+  /* 确保padding不影响宽度 */
+  /* margin: auto; */
+  /* 让表单居中 */
+}
