@@ -1,10 +1,22 @@
 import React from 'react';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { Button, Checkbox, Form, Input, Flex } from 'antd';
+import { Button, Checkbox, Form, Input, Flex, message } from 'antd';
 import styles from './login.module.css';  // 使用 CSS 模块
+import { useDispatch } from 'react-redux';
+import { fetchLogin } from '@/store/modules/user';
+import { useNavigate } from 'react-router-dom';
 const Login = () => {
-  const onFinish = (values) => {
+
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const onFinish = async (values) => {
     console.log('Received values of form: ', values);
+    //触发异步action fetchLogin
+    await dispatch(fetchLogin(values))
+    //1.跳转到首页
+    navigate('/')
+    //2.提示用户登陆成功
+    message.success('登陆成功')
   };
   return (
     <div className={styles['login-container']}>
