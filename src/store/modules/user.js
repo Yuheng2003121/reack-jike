@@ -8,7 +8,8 @@ const userStore = createSlice({
   //数据状态
   initialState:{
     // token: localStorage.getItem('token-key') || '' 
-    token: getToken() || '' 
+    token: getToken() || '' ,
+    userInfo: {}
   },
 
   //同步方法
@@ -19,12 +20,16 @@ const userStore = createSlice({
       //在localstoreage完成token持久化
       // localStorage.setItem('token-key', action.payload)
       _setToken(action.payload)
+    },
+
+    setUserInfo(state, action){
+      state.userInfo = action.payload
     }
   }
 })
 
 //结构同步方法
-const {setToken} =userStore.actions
+const { setToken, setUserInfo } =userStore.actions
 
 //异步方法 完成登录获取token
 const fetchLogin = (loginForm) => {
@@ -39,5 +44,18 @@ const fetchLogin = (loginForm) => {
   }
 }
 
-export { setToken, fetchLogin }
+//异步方法 获取个人信息
+const fetchUserInfo = () => {
+  return async (dispatch) => {
+    const res = await request({
+      method: 'get',
+      url: '/user/profile'
+    })
+    dispatch(setUserInfo(res.data.data))
+  }
+}
+
+
+
+export { setToken, fetchLogin, fetchUserInfo }
 export default userStore

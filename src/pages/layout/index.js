@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {  Layout, Menu, theme, Popconfirm } from 'antd';
 import {
   HomeOutlined,
@@ -8,6 +8,8 @@ import {
 } from '@ant-design/icons'
 import './index.scss'
 import { Outlet, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchUserInfo } from '@/store/modules/user';
 const { Header, Content, Sider } = Layout;
 
 
@@ -32,6 +34,14 @@ const items = [
 const GeekLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
 
+  //触发个人信息异步渲染
+  const dispatch = useDispatch()
+  const user = useSelector(state => state.user)
+  useEffect(()=>{
+    dispatch(fetchUserInfo())
+  }, [dispatch])
+
+
   //点击左侧选项跳转到二级路由
   const navigate = useNavigate()
   function onMenueClick(item){
@@ -44,7 +54,7 @@ const GeekLayout = () => {
       <Header className="header">
         <div className="logo" />
         <div className="user-info">
-          <span className="user-name">柴柴老师</span>
+          <span className="user-name">{user.userInfo.name}</span>
           <span className="user-logout">
             <Popconfirm title="是否确认退出？" okText="退出" cancelText="取消">
               <LogoutOutlined /> 退出
@@ -57,10 +67,11 @@ const GeekLayout = () => {
           <Menu
             mode="inline"
             theme="dark"
-            defaultSelectedKeys={['1']}
+            defaultSelectedKeys={['/']} //默认高亮,根据item的key匹配
             items={items}
             onClick={onMenueClick}
-            style={{ height: '100%', borderRight: 0 }}></Menu>
+            style={{ height: '100%', borderRight: 0 }}>
+          </Menu>
         </Sider>
         <Content className='layout-content' style={{ padding: 20 }}>
           {/* 渲染二级路由 */}
