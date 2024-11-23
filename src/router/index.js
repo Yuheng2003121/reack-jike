@@ -1,15 +1,32 @@
 import {createBrowserRouter} from 'react-router-dom'
 import Layout from '@/pages/layout'
 import Login from '@/pages/login'
-
+import { AuthRoute } from '@/components/AuthRoute'
+import Home from '@/pages/home'
+import Article from '@/pages/article'
+import Publish from '@/pages/publish'
 
 const router = createBrowserRouter([
   {
     //首页
     path: '/',
-    element: <Layout></Layout>,
+    element: <AuthRoute><Layout></Layout></AuthRoute>,
     //配置二级路由
-
+    children: [
+      {
+        // path: 'home',
+        index: true,
+        element: <Home></Home>
+      },
+      {
+        path: 'article',
+        element: <Article></Article>
+      },
+      {
+        path: 'publish',
+        element: <Publish></Publish>
+      },
+    ]
   },
 
   //404路由
