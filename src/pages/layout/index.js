@@ -9,7 +9,7 @@ import {
 import './index.scss'
 import { Outlet, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchUserInfo } from '@/store/modules/user';
+import { clearAll, fetchUserInfo } from '@/store/modules/user';
 const { Header, Content, Sider } = Layout;
 
 
@@ -31,22 +31,29 @@ const items = [
   },
 ]
 
-const GeekLayout = () => {
+const AppLayout = () => {
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(fetchUserInfo())
+  }, [dispatch])
   const [collapsed, setCollapsed] = useState(false);
 
   //触发个人信息异步渲染
-  const dispatch = useDispatch()
+ 
   const user = useSelector(state => state.user)
-  useEffect(()=>{
-    dispatch(fetchUserInfo())
-  }, [dispatch])
-
+ 
 
   //点击左侧选项跳转到二级路由
   const navigate = useNavigate()
   function onMenueClick(item){
     const path = item.key
     navigate(path)
+  }
+
+  //点击确认退出执行的回调函数
+  const onConfirm = () => {
+    dispatch(clearAll())
+    navigate('/login')
   }
   
   return (
@@ -56,7 +63,7 @@ const GeekLayout = () => {
         <div className="user-info">
           <span className="user-name">{user.userInfo.name}</span>
           <span className="user-logout">
-            <Popconfirm title="是否确认退出？" okText="退出" cancelText="取消">
+            <Popconfirm title="是否确认退出？" okText="退出" cancelText="取消" onConfirm={onConfirm}>
               <LogoutOutlined /> 退出
             </Popconfirm>
           </span>
@@ -81,5 +88,5 @@ const GeekLayout = () => {
     </Layout>
   );
 };
-export default GeekLayout;
+export default AppLayout;
 

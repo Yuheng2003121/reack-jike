@@ -1,6 +1,7 @@
 //axios封装处理
 import axios from "axios";
-import { getToken } from "./token";
+import { getToken, removeToken } from "./token";
+import router from "@/router";
 
 
 
@@ -32,10 +33,16 @@ request.interceptors.request.use(function (config) {
 request.interceptors.response.use(function (response) {
   // 2xx 范围内的状态码都会触发该函数。
   // 对响应数据做点什么
-  return response;
+  return response.data;
 }, function (error) {
   // 超出 2xx 范围的状态码都会触发该函数。
   // 对响应错误做点什么
+  //监控401 token失效 -> 清除本地token 跳转登录
+  if(error.response.status === 401){
+    removeToken()
+    router.navigate('/login').then(() => { window.location.reload() })
+   
+  }
   return Promise.reject(error);
 });
 

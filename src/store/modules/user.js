@@ -1,7 +1,8 @@
 //和用户相关的状态管理
-import { request } from "@/utils";
+import { removeToken, request } from "@/utils";
 import { createSlice } from "@reduxjs/toolkit";
 import { getToken, setToken as _setToken} from "@/utils";
+import { getProfileAPI, loginAPI } from "@/apis/user";
 
 const userStore = createSlice({
   name: 'user-slice',
@@ -24,22 +25,33 @@ const userStore = createSlice({
 
     setUserInfo(state, action){
       state.userInfo = action.payload
+    },
+
+    clearAll(state, action){
+      state.token = ''
+      state.userInfo = {}
+      removeToken()
     }
+
   }
 })
 
 //结构同步方法
-const { setToken, setUserInfo } =userStore.actions
+const { setToken, setUserInfo, clearAll } =userStore.actions
 
 //异步方法 完成登录获取token
 const fetchLogin = (loginForm) => {
   return async (dispatch) => {
-    const res = await request({
-      method:'post',
-      url:'/authorizations',
-      data: loginForm
-    })
-    dispatch(setToken(res.data.data.token))
+    // const res = await request({
+    //   method:'post',
+    //   url:'/authorizations',
+    //   data: loginForm
+    // })
+    
+    const res = await loginAPI(loginForm)
+    console.log(res);
+    
+    dispatch(setToken(res.data.token))
 
   }
 }
@@ -47,15 +59,16 @@ const fetchLogin = (loginForm) => {
 //异步方法 获取个人信息
 const fetchUserInfo = () => {
   return async (dispatch) => {
-    const res = await request({
-      method: 'get',
-      url: '/user/profile'
-    })
-    dispatch(setUserInfo(res.data.data))
+    // const res = await request({
+    //   method: 'get',
+    //   url: '/user/profile'
+    // })
+    const res = await getProfileAPI()
+    dispatch(setUserInfo(res.data))
   }
 }
 
 
 
-export { setToken, fetchLogin, fetchUserInfo }
+export { setToken, fetchLogin, fetchUserInfo, clearAll }
 export default userStore
